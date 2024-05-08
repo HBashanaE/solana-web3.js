@@ -1,20 +1,25 @@
-import { Blockhash } from '@solana/rpc-types';
-import { NewNonce } from '@solana/transaction-messages';
+import { Address } from '@solana/addresses';
+import { Blockhash, Slot } from '@solana/rpc-types';
+import { Nonce } from '@solana/transaction-messages';
 
 export type TransactionBlockhashLifetime = {
     blockhash: Blockhash;
+    lastValidBlockHeight: Slot;
 };
 
 export type TransactionDurableNonceLifetime = {
-    nonce: NewNonce;
+    nonce: Nonce;
+    nonceAccountAddress: Address;
 };
 
 export type TransactionWithLifetime = {
     readonly lifetimeConstraint: TransactionBlockhashLifetime | TransactionDurableNonceLifetime;
 };
 
-export function isTransactionBlockhashLifetime(
-    lifetime: TransactionWithLifetime['lifetimeConstraint'],
-): lifetime is TransactionBlockhashLifetime {
-    return 'blockhash' in lifetime;
-}
+export type TransactionWithBlockhashLifetime = {
+    readonly lifetimeConstraint: TransactionBlockhashLifetime;
+};
+
+export type TransactionWithDurableNonceLifetime = {
+    readonly lifetimeConstraint: TransactionDurableNonceLifetime;
+};

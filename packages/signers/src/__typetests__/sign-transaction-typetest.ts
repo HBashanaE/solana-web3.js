@@ -1,15 +1,16 @@
 import { SignatureBytes } from '@solana/keys';
 import {
     CompilableTransactionMessage,
-    IDurableNonceTransactionMessage,
-    ITransactionMessageWithBlockhashLifetime,
+    TransactionMessageWithBlockhashLifetime,
+    TransactionMessageWithDurableNonceLifetime,
 } from '@solana/transaction-messages';
-import { FullySignedTransaction, NewTransaction } from '@solana/transactions';
 import {
-    TransactionBlockhashLifetime,
-    TransactionDurableNonceLifetime,
+    FullySignedTransaction,
+    Transaction,
+    TransactionWithBlockhashLifetime,
+    TransactionWithDurableNonceLifetime,
     TransactionWithLifetime,
-} from '@solana/transactions/dist/types/lifetime';
+} from '@solana/transactions';
 
 import { ITransactionMessageWithSigners } from '../account-signer-meta';
 import {
@@ -24,18 +25,18 @@ type CompilableTransactionMessageWithSigners = CompilableTransactionMessage & IT
 {
     // [partiallySignTransactionMessageWithSigners]: returns a transaction with a blockhash lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners &
-        ITransactionMessageWithBlockhashLifetime;
+        TransactionMessageWithBlockhashLifetime;
     partiallySignTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        NewTransaction & { lifetimeConstraint: TransactionBlockhashLifetime }
+        Readonly<Transaction & TransactionWithBlockhashLifetime>
     >;
 }
 
 {
     // [partiallySignTransactionMessageWithSigners]: returns a transaction with a durable nonce lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners &
-        IDurableNonceTransactionMessage;
+        TransactionMessageWithDurableNonceLifetime;
     partiallySignTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        NewTransaction & { lifetimeConstraint: TransactionDurableNonceLifetime }
+        Readonly<Transaction & TransactionWithDurableNonceLifetime>
     >;
 }
 
@@ -43,25 +44,25 @@ type CompilableTransactionMessageWithSigners = CompilableTransactionMessage & IT
     // [partiallySignTransactionMessageWithSigners]: returns a transaction with an unknown lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners;
     partiallySignTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        NewTransaction & TransactionWithLifetime
+        Readonly<Transaction & TransactionWithLifetime>
     >;
 }
 
 {
     // [signTransactionMessageWithSigners]: returns a fully signed transaction with a blockhash lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners &
-        ITransactionMessageWithBlockhashLifetime;
+        TransactionMessageWithBlockhashLifetime;
     signTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        FullySignedTransaction & { lifetimeConstraint: TransactionBlockhashLifetime }
+        Readonly<FullySignedTransaction & TransactionWithBlockhashLifetime>
     >;
 }
 
 {
     // [signTransactionMessageWithSigners]: returns a fully signed transaction with a durable nonce lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners &
-        IDurableNonceTransactionMessage;
+        TransactionMessageWithDurableNonceLifetime;
     signTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        FullySignedTransaction & { lifetimeConstraint: TransactionDurableNonceLifetime }
+        Readonly<FullySignedTransaction & TransactionWithDurableNonceLifetime>
     >;
 }
 
@@ -69,7 +70,7 @@ type CompilableTransactionMessageWithSigners = CompilableTransactionMessage & IT
     // [signTransactionMessageWithSigners]: returns a fully signed transaction with an unknown lifetime
     const transactionMessage = null as unknown as CompilableTransactionMessageWithSigners;
     signTransactionMessageWithSigners(transactionMessage) satisfies Promise<
-        FullySignedTransaction & TransactionWithLifetime
+        Readonly<FullySignedTransaction & TransactionWithLifetime>
     >;
 }
 
