@@ -1532,6 +1532,7 @@ function createRpcClient(
   fetchMiddleware?: FetchMiddleware,
   disableRetryOnRateLimit?: boolean,
   httpAgent?: NodeHttpAgent | NodeHttpsAgent | false,
+  log = true,
 ): RpcClient {
   const fetch = customFetch ? customFetch : fetchImpl;
   let agent: NodeHttpAgent | NodeHttpsAgent | undefined;
@@ -1635,9 +1636,12 @@ function createRpcClient(
         if (too_many_requests_retries === 0) {
           break;
         }
-        console.error(
-          `Server responded with ${res.status} ${res.statusText}.  Retrying after ${waitTime}ms delay...`,
-        );
+        if(log){
+          console.error(
+            `Server responded with ${res.status} ${res.statusText}.  Retrying after ${waitTime}ms delay...`,
+          );
+        }
+        
         await sleep(waitTime);
         waitTime *= 2;
       }
@@ -3119,6 +3123,7 @@ export class Connection {
   constructor(
     endpoint: string,
     commitmentOrConfig?: Commitment | ConnectionConfig,
+    log = true
   ) {
     let wsEndpoint;
     let httpHeaders;
@@ -3150,6 +3155,7 @@ export class Connection {
       fetchMiddleware,
       disableRetryOnRateLimit,
       httpAgent,
+      log
     );
     this._rpcRequest = createRpcRequest(this._rpcClient);
     this._rpcBatchRequest = createRpcBatchRequest(this._rpcClient);
